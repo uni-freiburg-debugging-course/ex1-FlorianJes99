@@ -30,7 +30,6 @@ public class Fuzzer {
     private ExpressionNode generateNextNode(int currentDepth) {
         if (random.nextBoolean() && currentDepth > 0) {
             var nextDepth = --currentDepth;
-            System.out.println(currentDepth);
             return new OperatorNode(
                     Operator.getRandom(random),
                     generateNextNode(nextDepth),
@@ -46,7 +45,9 @@ public class Fuzzer {
 
     public static void main(String[] args) {
         Fuzzer fuzzer = new Fuzzer(0);
-        File file = new File("output/output.smt2");
+        File folder = new File("app/output/");
+        var name = "output.smt2";
+        var file = new File(folder, name);
         try {
             if (file.exists()) {
                 Files.delete(file.toPath());

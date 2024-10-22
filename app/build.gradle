@@ -49,4 +49,5 @@ tasks.register('runFuzzer', JavaExec) {
     description = 'Runs the fuzzer to generate input for the main programm'
     mainClass = 'org.fuzzing.Fuzzer'
     classpath = sourceSets.main.runtimeClasspath
+    workingDir = rootProject.projectDir
 }
