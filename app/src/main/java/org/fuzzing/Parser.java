@@ -15,7 +15,8 @@ public class Parser {
 
 
     static Node parse(String line) {
-        return new Parser(line).parseExpr();
+        var parser = new Parser(line);
+        return parser.parseExpr();
     }
 
     private Node parseExpr() {

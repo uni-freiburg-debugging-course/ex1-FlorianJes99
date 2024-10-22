@@ -21,13 +21,6 @@ enum Operator implements Token {
         this.symbol = symbol;
     }
 
-    public static Optional<Token> getFromChar(char input) {
-        return Arrays.stream(Operator.values())
-                .filter(op -> op.symbol == input)
-                .findFirst()
-                .map(op -> (Token) op);
-    }
-
     @Override
     public String toString() {
         return Character.toString(this.symbol);
@@ -67,11 +60,10 @@ enum Keyword implements Token {
         this.keywordString = keywordString;
     }
 
-    public static Optional<Token> getFromInput(String input) {
+    public static Optional<Keyword> getFromInput(String input) {
         return Arrays.stream(Keyword.values())
                 .filter(keyword -> keyword.keywordString.equals(input))
-                .findFirst()
-                .map(token -> (Token) token);
+                .findFirst();
     }
 }
 
@@ -82,12 +74,16 @@ final class NumberToken implements Token {
         this.value = value;
     }
 
-    public static Optional<Token> getNumber(String value) {
+    public static Optional<NumberToken> getNumber(String value) {
         try {
             return Optional.of(new NumberToken(Integer.parseInt(value)));
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public NumberToken getNegativeNumber() {
+        return new NumberToken(-value);
     }
 
     @Override

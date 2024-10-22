@@ -26,6 +26,7 @@ public class App {
             Files.readAllLines(file.toPath()).stream()
                     .filter(line -> !line.isBlank())
                     .map(Parser::parse)
+                    // .peek(System.out::println)
                     .map(NodeEvaluator::eval)
                     .forEach(val -> System.out.println(val >= 0
                             ? String.format("%d", val)

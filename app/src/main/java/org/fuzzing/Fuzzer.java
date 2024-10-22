@@ -41,7 +41,7 @@ public class Fuzzer {
     }
 
     private NumberNode getRandomNumber() {
-        return new NumberNode(random.nextInt(0, Integer.MAX_VALUE));
+        return new NumberNode(random.nextInt());
     }
 
     public static void main(String[] args) {

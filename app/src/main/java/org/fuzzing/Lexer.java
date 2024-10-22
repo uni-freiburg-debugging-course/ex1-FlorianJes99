@@ -11,45 +11,61 @@ public class Lexer {
 
     private final String line;
     private int position = 0;
+    private boolean isNegative = false;
+    private final List<Token> result = new ArrayList<>();
 
     public Lexer(String line) {
         this.line = line;
     }
 
     List<Token> tokenizeInput() {
-        List<Token> result = new ArrayList<>();
         while (position < line.length()) {
             char singleChar = line.charAt(position);
-            var bracket = getBracket(singleChar);
-            if (bracket.isPresent()) {
-                result.add(bracket.get());
-                position++;
-            } else if (Operator.getFromChar(singleChar).isPresent()) {
-                result.add(Operator.getFromChar(singleChar).get());
-                position++;
-            } else if (singleChar != ' ') {
-                var sb = new StringBuilder();
-                while (position < line.length() && singleChar != ' ' && Bracket.getFromChar(singleChar).isEmpty()) {
-                    sb.append(singleChar);
-                    position++;
-                    singleChar = line.charAt(position);
+            switch (singleChar) {
+                case '(' -> result.add(Bracket.LEFTBRACKET);
+                case ')' -> result.add(Bracket.RIGHTBRACKET);
+                case '+' -> result.add(Operator.ADD);
+                case '*' -> result.add(Operator.MULTIPLY);
+                case '-' -> {
+                    if (peek().isPresent() && peek().get() == ' ') {
+                        result.add(Operator.SUBTRACT);
+                    } else {
+                        isNegative = true;
+                    }
                 }
-                var maybeOther = Keyword.getFromInput(sb.toString())
-                        .or(() -> NumberToken.getNumber(sb.toString()));
-                if (maybeOther.isEmpty()) {
-                    System.err.println("Error: Failed Parsing String: " + sb);
-                } else {
-                    result.add(maybeOther.get());
-                }
-            } else {
-                position++;
+                case ' ' -> {}
+                default -> parseToToken(singleChar);
             }
+            position++;
         }
         return result;
     }
 
-    private Optional<Token> getBracket(char input) {
-        return Bracket.getFromChar(input)
-                .or(() -> Operator.getFromChar(input));
+    private void parseToToken(char singleChar) {
+        var sb = new StringBuilder();
+        sb.append(singleChar);
+        while (peek().isPresent() && peek().get() != ' ' && Bracket.getFromChar(peek().get()).isEmpty()) {
+            position++;
+            singleChar = line.charAt(position);
+            sb.append(singleChar);
+        }
+        if (Keyword.getFromInput(sb.toString()).isPresent()) {
+            result.add(Keyword.getFromInput(sb.toString()).get());
+            return;
+        }
+        var numOpt = NumberToken.getNumber(sb.toString());
+        if (numOpt.isPresent()) {
+            result.add(isNegative ? numOpt.get().getNegativeNumber() : numOpt.get());
+            isNegative = false;
+            return;
+        }
+        throw new IllegalArgumentException("Could not parse: " + sb);
+    }
+
+    private Optional<Character> peek() {
+        if (position >= line.length() -2) {
+            return Optional.empty();
+        }
+        return Optional.of(line.charAt(position + 1));
     }
 }
