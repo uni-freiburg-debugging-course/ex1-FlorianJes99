@@ -40,6 +40,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+run {
+    workingDir = rootProject.projectDir
+}
+
 tasks.register('runFuzzer', JavaExec) {
     group = 'application'
     description = 'Runs the fuzzer to generate input for the main programm'

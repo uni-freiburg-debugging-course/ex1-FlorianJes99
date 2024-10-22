@@ -28,17 +28,17 @@ This generates a file in the [output folder](app/output) containing 10.000 expre
 
 ```./gradlew run --args=path/to/my/file```
 
-Note that the program is ran from the [App](app) directory. 
+Note that the program is run from the [Root Directory](). 
 So when specifying the relative path keep that in mind.
 
 #### Examples:
 
-```./gradlew run --args=output/output.smt2``` (only works if runFuzzer previously generated some input)
+```./gradlew run --args=app/output/output.smt2``` (only works if runFuzzer previously generated some input)
 
-```./gradlew run --args=../simp.smt2``` (run the given simple test file)
+```./gradlew run --args=simp.smt2``` (run the given simple test file)
 
 #### Using z3 for comparison
 
 When using z3 to compare, put the -q flag to the ./gradlew command to prevent some output 'spam' by gradle to the terminal, 
 which would cause the z3 comparison to fail.
-```z3 app/output/output.smt2 > res1 && ./gradlew run -q --args=output/output.smt2 > res2 && cmp res1 res2 && echo $?```
+```z3 app/output/output.smt2 > res1 && ./gradlew run -q --args=app/output/output.smt2 > res2 && cmp res1 res2 && echo $?```
