@@ -5,12 +5,12 @@ package org.fuzzing;
  */
 public class NodeEvaluator {
 
-  public static int eval(Node root) {
-    if (!(root instanceof CommandNode command)) {
-      throw new IllegalArgumentException();
+    static int eval(Node root) {
+        if (!(root instanceof CommandNode command)) {
+            throw new IllegalArgumentException();
+        }
+        return switch (command.getCommand()) {
+            case CommandToken.SIMPLIFY -> command.getChild().evaluate();
+        };
     }
-    return switch (command.getCommand()) {
-      case CommandToken.SIMPLIFY -> command.getChild().evaluate();
-    };
-  }
 }

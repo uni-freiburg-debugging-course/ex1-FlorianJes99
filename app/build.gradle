@@ -21,8 +21,6 @@ dependencies {
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // This dependency is used by the application.
-    implementation libs.guava
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -42,9 +40,9 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-task runFuzzer(type: JavaExec) {
-  group = 'application'
-  description = 'Runs the fuzzer to generate input for the main programm'
-  main = 'org.fuzzing.Fuzzer'
-  classpath = sourceSets.main.runtimeClasspath
+tasks.register('runFuzzer', JavaExec) {
+    group = 'application'
+    description = 'Runs the fuzzer to generate input for the main programm'
+    mainClass = 'org.fuzzing.Fuzzer'
+    classpath = sourceSets.main.runtimeClasspath
 }
