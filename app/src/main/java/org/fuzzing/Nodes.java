@@ -7,7 +7,7 @@ sealed interface Node permits ExpressionNode, NestedNode {
 }
 
 sealed interface ExpressionNode extends Node permits NumberNode, OperatorNode {
-    int evaluate();
+    long evaluate();
 }
 
 sealed interface NestedNode extends Node {
@@ -16,7 +16,7 @@ sealed interface NestedNode extends Node {
 
 record NumberNode(int number) implements ExpressionNode {
     @Override
-    public int evaluate() {
+    public long evaluate() {
         return number();
     }
 
@@ -26,17 +26,16 @@ record NumberNode(int number) implements ExpressionNode {
     }
 }
 
-final class CommandNode implements NestedNode {
-    // List<ExpressionNode> children = new ArrayList<>();
+final class KeywordNode implements NestedNode {
     ExpressionNode child = null;
-    CommandToken command;
+    Keyword keyword;
 
-    public CommandNode(CommandToken command) {
-        this.command = command;
+    public KeywordNode(Keyword keyword) {
+        this.keyword = keyword;
     }
 
-    public CommandNode(CommandToken command, ExpressionNode child) {
-        this.command = command;
+    public KeywordNode(Keyword keyword, ExpressionNode child) {
+        this.keyword = keyword;
         this.child = child;
     }
 
@@ -48,8 +47,8 @@ final class CommandNode implements NestedNode {
         this.child = child;
     }
 
-    public CommandToken getCommand() {
-        return command;
+    public Keyword getKeyword() {
+        return keyword;
     }
 
     public ExpressionNode getChild() {
@@ -58,7 +57,7 @@ final class CommandNode implements NestedNode {
 
     @Override
     public String toString() {
-        return String.format("( %s %s )", command.toString().toLowerCase(), child.toString());
+        return String.format("( %s %s )", keyword.toString().toLowerCase(), child.toString());
     }
 }
 
@@ -91,7 +90,7 @@ final class OperatorNode implements ExpressionNode, NestedNode {
     }
 
     @Override
-    public int evaluate() {
+    public long evaluate() {
         return switch (operator) {
             case Operator.ADD -> leftChild.evaluate() + rightChild.evaluate();
             case Operator.SUBTRACT -> leftChild.evaluate() - rightChild.evaluate();

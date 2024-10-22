@@ -9,33 +9,32 @@ import java.util.Optional;
  */
 public class Lexer {
 
-    String line;
-    int position;
+    private final String line;
+    private int position = 0;
 
     public Lexer(String line) {
         this.line = line;
-        position = 0;
     }
 
     List<Token> tokenizeInput() {
         List<Token> result = new ArrayList<>();
         while (position < line.length()) {
-            char basic = line.charAt(position);
-            var singleCharacterToken = getFromSingleChar(basic);
-            if (singleCharacterToken.isPresent()) {
-                result.add(singleCharacterToken.get());
+            char singleChar = line.charAt(position);
+            var bracket = getBracket(singleChar);
+            if (bracket.isPresent()) {
+                result.add(bracket.get());
                 position++;
-            } else if (Operator.getFromChar(basic).isPresent()) {
-                result.add(Operator.getFromChar(basic).get());
+            } else if (Operator.getFromChar(singleChar).isPresent()) {
+                result.add(Operator.getFromChar(singleChar).get());
                 position++;
-            } else if (basic != ' ') {
+            } else if (singleChar != ' ') {
                 var sb = new StringBuilder();
-                while (position < line.length() && basic != ' ' && Bracket.getFromChar(basic).isEmpty()) {
-                    sb.append(basic);
+                while (position < line.length() && singleChar != ' ' && Bracket.getFromChar(singleChar).isEmpty()) {
+                    sb.append(singleChar);
                     position++;
-                    basic = line.charAt(position);
+                    singleChar = line.charAt(position);
                 }
-                var maybeOther = CommandToken.getFromInput(sb.toString())
+                var maybeOther = Keyword.getFromInput(sb.toString())
                         .or(() -> NumberToken.getNumber(sb.toString()));
                 if (maybeOther.isEmpty()) {
                     System.err.println("Error: Failed Parsing String: " + sb);
@@ -49,7 +48,7 @@ public class Lexer {
         return result;
     }
 
-    private Optional<Token> getFromSingleChar(char input) {
+    private Optional<Token> getBracket(char input) {
         return Bracket.getFromChar(input)
                 .or(() -> Operator.getFromChar(input));
     }

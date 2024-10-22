@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * Tokens
  */
-sealed interface Token permits Bracket, NumberToken, CommandToken, Operator {
+sealed interface Token permits Bracket, NumberToken, Keyword, Operator {
 }
 
 enum Operator implements Token {
@@ -58,18 +58,18 @@ enum Bracket implements Token {
     }
 }
 
-enum CommandToken implements Token {
+enum Keyword implements Token {
     SIMPLIFY("simplify");
 
-    final String command;
+    final String keywordString;
 
-    CommandToken(String command) {
-        this.command = command;
+    Keyword(String keywordString) {
+        this.keywordString = keywordString;
     }
 
     public static Optional<Token> getFromInput(String input) {
-        return Arrays.stream(CommandToken.values())
-                .filter(command -> command.command.equals(input))
+        return Arrays.stream(Keyword.values())
+                .filter(keyword -> keyword.keywordString.equals(input))
                 .findFirst()
                 .map(token -> (Token) token);
     }

@@ -8,16 +8,16 @@ public class App {
     public static void main(String[] args) {
         if (args.length != 1) {
             System.err.println("""
-          Es muss genau ein Argument angegeben werden.
-          Dies muss eine Datei mit je einem einfachen LISP-artigen
-          Ausdruck pro Zeile sein.
+          There needs to be an input file specified containing lisp
+          statements with the 'simplify' keyword.
+          Every line in this file needs to be a single expression.
           """);
             System.exit(1);
             return;
         }
         File file = new File(args[0]);
         if (!file.exists()) {
-            System.err.println("Specified file does not exist. Expected: " +
+            System.err.println("Specified file does not exist. Specified: " +
                     file.getAbsolutePath());
             System.exit(1);
             return;
@@ -26,7 +26,6 @@ public class App {
             Files.readAllLines(file.toPath()).stream()
                     .filter(line -> !line.isBlank())
                     .map(Parser::parse)
-                    //.peek(System.out::println)
                     .map(NodeEvaluator::eval)
                     .forEach(val -> System.out.println(val >= 0
                             ? String.format("%d", val)

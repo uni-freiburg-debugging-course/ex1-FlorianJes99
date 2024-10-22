@@ -29,7 +29,7 @@ public class Parser {
             }
             case NumberToken num -> new NumberNode(num.value);
             case Operator op -> computeTree(new OperatorNode(op));
-            case CommandToken comm -> computeTree(new CommandNode(comm));
+            case Keyword comm -> computeTree(new KeywordNode(comm));
         };
     }
 

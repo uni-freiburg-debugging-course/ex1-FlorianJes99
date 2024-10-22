@@ -23,7 +23,7 @@ public class Fuzzer {
                 op,
                 generateNextNode(maxDepth),
                 generateNextNode(maxDepth));
-        var root = new CommandNode(CommandToken.SIMPLIFY, exprNode);
+        var root = new KeywordNode(Keyword.SIMPLIFY, exprNode);
         return root.toString();
     }
 
@@ -41,7 +41,7 @@ public class Fuzzer {
     }
 
     private NumberNode getRandomNumber() {
-        return new NumberNode(random.nextInt(10_000));
+        return new NumberNode(random.nextInt(0, Integer.MAX_VALUE));
     }
 
     public static void main(String[] args) {
