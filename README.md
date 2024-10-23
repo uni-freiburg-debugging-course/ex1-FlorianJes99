@@ -29,6 +29,7 @@ This generates a file in the [output folder](app/output) containing 10.000 expre
 ```./gradlew run --args=path/to/my/file```
 
 Note that the program is run from the [Root Directory](). 
+If something does not work, please create the app/output/ directory yourself. Otherwise the fuzzer won't work at its current state.
 So when specifying the relative path keep that in mind.
 
 #### Examples:
