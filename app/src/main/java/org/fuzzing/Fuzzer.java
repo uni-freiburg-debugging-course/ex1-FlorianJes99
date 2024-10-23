@@ -46,6 +46,14 @@ public class Fuzzer {
     public static void main(String[] args) {
         Fuzzer fuzzer = new Fuzzer(0);
         File folder = new File("app/output/");
+        if (!folder.exists()) {
+            try {
+                Files.createDirectory(folder.toPath());
+            } catch (IOException e) {
+                System.err.println("Error while creating output directory");
+                System.exit(1);
+            }
+        }
         var name = "output.smt2";
         var file = new File(folder, name);
         try {
